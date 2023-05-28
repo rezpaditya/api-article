@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, Integer, Boolean
-from db.database import Base
+from .database import Base
 
 
 class Article(Base):

@@ -15,5 +15,10 @@ jobs:
           username: ${{secrets.USERNAME}}
           key: ${{secrets.KEY}}
           script: |
-            touch ~/deploying.txt
+            # building the docker image
+            docker build -t api-article .
+            
+            # running docker image
+            docker run --rm -d -p 8000:80 api-article 
+
             echo 'Deployment to DigitalOcean finished!'

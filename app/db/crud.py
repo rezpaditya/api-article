@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from db import models, schemas
+from . import models, schemas
 
 
 def get_article(db: Session, article_id: int):
