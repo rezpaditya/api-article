@@ -16,7 +16,7 @@ jobs:
           key: ${{secrets.KEY}}
           script: |
             # cloning the project
-            git clone git@github.com:rezpaditya/api-article.git /tmp
+            git clone git@github.com:rezpaditya/api-article.git /tmp/api-article
             cd /tmp/api-article
 
             # building the docker image
