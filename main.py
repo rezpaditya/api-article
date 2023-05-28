@@ -1,29 +1,34 @@
-from typing import Union
+from fastapi import FastAPI, Depends, HTTPException
+from sqlalchemy.orm import Session
+from db import models, crud, schemas
+from db.database import SessionLocal, engine
 
-from fastapi import FastAPI
-from pydantic import BaseModel
-
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-
-class Article(BaseModel):
-    title: str
-    text: str
-    image: str
-    is_publish: bool = False
-
-
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+# Dependency
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
-@app.get("/article/{article_id}")
-def read_article(article_id: int, q: Union[str, None] = None):
-    return {"article_id": article_id, "q": q}
+@app.get("/articles/", response_model=list[schemas.Article])
+def read_articles(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    articles = crud.get_articles(db, skip=skip, limit=limit)
+    if articles:
+        return [article.json() for article in articles]
+    else:
+        raise HTTPException(status_code=404, detail="failed to fetch articles...")
 
 
-@app.put("/articles/{article_id}")
-def update_article(article_id: int, article: Article):
-    return {"title": article.title, "article_id": article_id}
+@app.post("/articles", response_model=schemas.Article)
+def create_article(article: schemas.ArticleCreate, db: Session = Depends(get_db)):
+    db_article = crud.create_article(db=db, article=article)
+    if db_article:
+        return db_article.json()
+    else:
+        raise HTTPException(status_code=401, detail="Failed to create article...")
