@@ -144,3 +144,5 @@ cython_debug/
 
 # SQLite
 blog.db
+
+launch.json

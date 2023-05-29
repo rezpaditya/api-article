@@ -1,10 +1,11 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 class ArticleBase(BaseModel):
     title: str
-    text: str
-    image: str
+    text: Optional[str]
+    image: Optional[str]
     is_publish: bool = False
 
 

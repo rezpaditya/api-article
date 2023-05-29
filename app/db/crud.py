@@ -17,3 +17,15 @@ def create_article(db: Session, article: schemas.ArticleCreate):
     db.commit()
     db.refresh(db_article)
     return db_article
+
+
+def update_article(db: Session, article: schemas.Article):
+    db_article = db.query(models.Article).filter(models.Article.id == article.id)
+    db_article.update(article.dict(exclude_unset=True))
+    db.commit()
+    return db_article.first()
+
+def delete_article(db: Session, article_id: int):
+    effected_rows = db.query(models.Article).filter(models.Article.id == article_id).delete()
+    db.commit()
+    return bool(effected_rows > 0)
