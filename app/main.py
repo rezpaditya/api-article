@@ -20,7 +20,7 @@ def get_db():
 def read_articles(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     articles = crud.get_articles(db, skip=skip, limit=limit)
     if articles:
-        return [article.json() for article in articles]
+        return articles
     else:
         raise HTTPException(status_code=404, detail="failed to fetch articles...")
     
@@ -29,7 +29,7 @@ def read_articles(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
 def read_articles(article_id, db: Session = Depends(get_db)):
     article = crud.get_article(db, article_id=article_id)
     if article:
-        return article.json()
+        return article
     else:
         raise HTTPException(status_code=404, detail=f"Article ID {article_id} is not found...")
 
@@ -38,7 +38,7 @@ def read_articles(article_id, db: Session = Depends(get_db)):
 def create_article(article: schemas.ArticleCreate, db: Session = Depends(get_db)):
     db_article = crud.create_article(db=db, article=article)
     if db_article:
-        return db_article.json()
+        return db_article
     else:
         raise HTTPException(status_code=401, detail="Failed to create article...")
 
@@ -47,7 +47,7 @@ def create_article(article: schemas.ArticleCreate, db: Session = Depends(get_db)
 def create_article(article: schemas.Article, db: Session = Depends(get_db)):
     db_article = crud.update_article(db=db, article=article)
     if db_article:
-        return db_article.json()
+        return db_article
     else:
         raise HTTPException(status_code=401, detail=f"Failed to update article with ID {article.id}...")
 

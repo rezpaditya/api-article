@@ -17,4 +17,4 @@ class Article(ArticleBase):
     id: int
 
     class Config:
-        orm_modde = True
+        orm_mode = True

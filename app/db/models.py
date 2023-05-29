@@ -10,6 +10,3 @@ class Article(Base):
     text = Column(String)
     image = Column(String)
     is_publish = Column(Boolean, default=False)
-
-    def json(self):
-        return self.__dict__
