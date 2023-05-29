@@ -16,14 +16,26 @@ jobs:
           key: ${{secrets.KEY}}
           script: |
             # cloning the project
-            git clone git@github.com:rezpaditya/api-article.git /tmp/api-article
-            cd /tmp/api-article
+            repo=/tmp/api-article
+            if cd ${repo}; then 
+              git pull; 
+            else 
+              git clone git@github.com:rezpaditya/api-article.git ${repo}; 
+              cd ${repo}
+            fi
 
             # building the docker image
             docker build -t api-article .
             
             # running docker image
-            docker stop api-article
+            docker stop api-article  || echo "Continueing..."
             docker run --rm -d -p 8000:80 --name api-article api-article 
 
-            echo 'Deployment to DigitalOcean finished!'
+            exit_code=$?
+            if ${exit_code} -ne 0; then
+              echo 'Something went wrong!'
+            else  
+              echo 'Deployment to DigitalOcean is finished successfully!'
+            fi
+
+            exit ${exit_code}
