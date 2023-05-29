@@ -17,12 +17,9 @@ jobs:
           script: |
             # cloning the project
             repo=/tmp/api-article
-            if cd ${repo}; then 
-              git pull; 
-            else 
-              git clone git@github.com:rezpaditya/api-article.git ${repo}; 
-              cd ${repo}
-            fi
+            rm -Rf ${repo} || echo "${repo} does not exist, continuing..."
+            git clone git@github.com:rezpaditya/api-article.git ${repo}; 
+            cd ${repo}
 
             # building the docker image
             docker build -t api-article .
@@ -30,12 +27,3 @@ jobs:
             # running docker image
             docker stop api-article  || echo "Continueing..."
             docker run --rm -d -p 8000:80 --name api-article api-article 
-
-            exit_code=$?
-            if ${exit_code} -ne 0; then
-              echo 'Something went wrong!'
-            else  
-              echo 'Deployment to DigitalOcean is finished successfully!'
-            fi
-
-            exit ${exit_code}
