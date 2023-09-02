@@ -146,3 +146,4 @@ cython_debug/
 blog.db
 
 launch.json
+*.drawio.*
